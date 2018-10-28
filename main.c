@@ -67,7 +67,7 @@ int main(int argc, char **argv) {
         costs[i] = (cost_data*)malloc(w*sizeof(cost_data));
     M = (long**)malloc(h*sizeof(long*));
     for(i = 0; i < h; i++)
-        M[i] = ( long*)malloc(w*sizeof(long));
+        M[i] = (long*)malloc(w*sizeof(long));
     seam = (int*)malloc((h+1)*sizeof(int));
     
     //initialize costs
@@ -77,7 +77,7 @@ int main(int argc, char **argv) {
     int max_c = w-1;
     int num_iterations = 0;
     
-    printf("size %ld \n",sizeof(long));
+    //printf("size %ld \n",sizeof(long));
     
     //here start the loop
     while(num_iterations < 200){
@@ -86,9 +86,21 @@ int main(int argc, char **argv) {
         
         //call the kernel to compute comulative map
         compute_M(costs, M, h, min_c, max_c);
+        
+        /*
+        for(i = min_c; i <= max_c; i++)
+            printf("%ld, ",M[h-1][i]);
+        getchar();
+        */
             
         //kernel to find the seam
         find_seam(M, seam, h, min_c, max_c);
+        
+        /*
+        for(i = 0; i < h; i++)
+            printf("%d \n", seam[i]);
+        getchar();
+        */
         
         //remove seam
         remove_seam(pixels, costs, seam, h, &min_c, &max_c);

@@ -9,7 +9,11 @@
 pixel BORDER_PIXEL = {.r = 0, .g = 0, .b = 0, .a = 0};
 
 long lmin(long a, long b){
-    return a < b ? a : b;
+    //return a < b ? a : b;
+    if(a < b)
+        return a;
+    else
+        return b;
 }
 
 cost_data compute_single_cost(int r, int c, pixel **pixels, int h, int min_c, int max_c){
@@ -69,17 +73,16 @@ void compute_M(cost_data **costs, long **M, int h, int min_c, int max_c){
     int r, c;
     
     for(c = min_c; c <= max_c; c++){
-        M[0][c] = lmin(costs[0][c].left, lmin(costs[0][c].left, costs[0][c].left));
+        M[0][c] = lmin(costs[0][c].left, lmin(costs[0][c].up, costs[0][c].right));
     }
     
     for(r = 1; r < h; r++){
         for(c = min_c+1; c < max_c; c++){
             M[r][c] = lmin(M[r-1][c-1] + costs[r][c].left, lmin(M[r-1][c] + costs[r][c].up, M[r-1][c+1] + costs[r][c].right));
         }
-        M[r][min_c] = lmin(M[r-1][c] + costs[r][c].up, M[r-1][c+1] + costs[r][c].right);
-        M[r][max_c] = lmin(M[r-1][c-1] + costs[r][c].left, M[r-1][c] + costs[r][c].up);
+        M[r][min_c] = lmin(M[r-1][min_c] + costs[r][min_c].up, M[r-1][min_c+1] + costs[r][min_c].right);
+        M[r][max_c] = lmin(M[r-1][max_c-1] + costs[r][max_c].left, M[r-1][max_c] + costs[r][max_c].up);
     }
-    
 }
 
 
