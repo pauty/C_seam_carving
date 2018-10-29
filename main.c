@@ -56,7 +56,7 @@ int main(int argc, char **argv) {
     int *seam = NULL;
     int i;
      
-    imgv = stbi_load("imgs/beach.bmp", &w, &h, &ncomp, 0);
+    imgv = stbi_load("imgs/coast.bmp", &w, &h, &ncomp, 0);
     if(ncomp != 3)
         printf("ERROR -- image does not have 3 components (RGB)\n");
     pixels = build_pixels(imgv, w, h);
@@ -92,15 +92,17 @@ int main(int argc, char **argv) {
             printf("%ld, ",M[h-1][i]);
         getchar();
         */
+        
             
         //kernel to find the seam
         find_seam(M, seam, h, min_c, max_c);
         
-        /*
+        
         for(i = 0; i < h; i++)
             printf("%d \n", seam[i]);
         getchar();
-        */
+        
+        
         
         //remove seam
         remove_seam(pixels, costs, seam, h, &min_c, &max_c);
@@ -115,13 +117,15 @@ int main(int argc, char **argv) {
             printf("\n");
         printf("%d ",costs[i]);
     }*/
+    
+    /*
     pixel pix;
-    for(i = 0; i < h;  i++){
+    for(i = 0; i < h; i++){
         pix = pixels[i][min_c+260];
         printf("[ %d %d % d ] \n",pix.r, pix.g, pix.b);
-    }
-    /*
+    }*/
     
+    /*
     printf("\n\n -------- \n");
     
     for(i = 0; i < h; i++){

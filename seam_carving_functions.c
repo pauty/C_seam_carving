@@ -92,6 +92,7 @@ void find_seam(long **M, int *seam, int h, int min_c, int max_c){
     
     r = h-1;
     min_index = min_c;
+    printf("------min c: %d \n",min_c);
     for(c = min_c+1; c <= max_c; c++){
         if(M[r][c] < M[r][min_index])
             min_index = c;
@@ -152,7 +153,7 @@ void remove_seam(pixel **pixels, cost_data **costs, int *seam, int h, int *min_c
             for(c = seam[r]+2; c > *min_c; c--){
                 if(c <= *max_c){
                     if(c >= seam[r]-1)
-                        costs[r][c] = compute_single_cost(r, c, pixels, h, *min_c-1, *max_c);
+                        costs[r][c] = compute_single_cost(r, c, pixels, h, *min_c+1, *max_c);
                     else
                         costs[r][c] = costs[r][c-1];
                 }
