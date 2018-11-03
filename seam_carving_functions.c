@@ -92,7 +92,7 @@ void find_seam(long **M, int *seam, int h, int min_c, int max_c){
     
     r = h-1;
     min_index = min_c;
-    printf("------min c: %d \n",min_c);
+    //printf("------min c: %d \n",min_c);
     for(c = min_c+1; c <= max_c; c++){
         if(M[r][c] < M[r][min_index])
             min_index = c;

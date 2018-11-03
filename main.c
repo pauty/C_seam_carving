@@ -97,10 +97,11 @@ int main(int argc, char **argv) {
         //kernel to find the seam
         find_seam(M, seam, h, min_c, max_c);
         
-        
+        /*
         for(i = 0; i < h; i++)
             printf("%d \n", seam[i]);
         getchar();
+        */
         
         
         
@@ -133,7 +134,7 @@ int main(int argc, char **argv) {
     }*/
     
     unsigned char *output = flatten_pixels(pixels, h, min_c, max_c);
-    int success = stbi_write_bmp("output.bmp", (max_c-min_c)+1, h, 3, output);
+    int success = stbi_write_bmp("img1.bmp", (max_c-min_c)+1, h, 3, output);
     
     printf("success : %d \n",success);
     
