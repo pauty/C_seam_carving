@@ -8,17 +8,13 @@
 
 pixel BORDER_PIXEL = {.r = 0, .g = 0, .b = 0, .a = 0};
 
-long lmin(long a, long b){
-    //return a < b ? a : b;
-    if(a < b)
-        return a;
-    else
-        return b;
+int min(int a, int b){
+    return a < b ? a : b;
 }
 
 cost_data compute_single_cost(int r, int c, pixel **pixels, int h, int min_c, int max_c){
         pixel pix1, pix2, pix3;
-        long p_r, p_g, p_b, rdiff, gdiff, bdiff;
+        int p_r, p_g, p_b, rdiff, gdiff, bdiff;
         cost_data res;
         
         //handle borders
@@ -36,23 +32,23 @@ cost_data compute_single_cost(int r, int c, pixel **pixels, int h, int min_c, in
             pix3 = pixels[r-1][c];
             
         //compute partials
-        p_r = labs(pix1.r - pix2.r);
-        p_g = labs(pix1.g - pix2.g);
-        p_b = labs(pix1.b - pix2.b);
+        p_r = abs(pix1.r - pix2.r);
+        p_g = abs(pix1.g - pix2.g);
+        p_b = abs(pix1.b - pix2.b);
         
         //compute left cost       
-        rdiff = p_r + labs(pix3.r - pix2.r);
-        gdiff = p_g + labs(pix3.g - pix2.g);
-        bdiff = p_b + labs(pix3.b - pix2.b);
+        rdiff = p_r + abs(pix3.r - pix2.r);
+        gdiff = p_g + abs(pix3.g - pix2.g);
+        bdiff = p_b + abs(pix3.b - pix2.b);
         res.left = rdiff + gdiff + bdiff;
         
         //compute up cost
         res.up = p_r + p_g + p_b;
         
         //compute right cost
-        rdiff = p_r + labs(pix3.r - pix1.r);
-        gdiff = p_g + labs(pix3.g - pix1.g);
-        bdiff = p_b + labs(pix3.b - pix1.b);
+        rdiff = p_r + abs(pix3.r - pix1.r);
+        gdiff = p_g + abs(pix3.g - pix1.g);
+        bdiff = p_b + abs(pix3.b - pix1.b);
         res.right = rdiff + gdiff + bdiff;
         
         return res;
@@ -69,24 +65,24 @@ void compute_all_costs(pixel **pixels, cost_data **costs, int w, int h){
     }       
 }
 
-void compute_M(cost_data **costs, long **M, int h, int min_c, int max_c){
+void compute_M(cost_data **costs, int **M, int h, int min_c, int max_c){
     int r, c;
     
     for(c = min_c; c <= max_c; c++){
-        M[0][c] = lmin(costs[0][c].left, lmin(costs[0][c].up, costs[0][c].right));
+        M[0][c] = min(costs[0][c].left, min(costs[0][c].up, costs[0][c].right));
     }
     
     for(r = 1; r < h; r++){
         for(c = min_c+1; c < max_c; c++){
-            M[r][c] = lmin(M[r-1][c-1] + costs[r][c].left, lmin(M[r-1][c] + costs[r][c].up, M[r-1][c+1] + costs[r][c].right));
+            M[r][c] = min(M[r-1][c-1] + costs[r][c].left, min(M[r-1][c] + costs[r][c].up, M[r-1][c+1] + costs[r][c].right));
         }
-        M[r][min_c] = lmin(M[r-1][min_c] + costs[r][min_c].up, M[r-1][min_c+1] + costs[r][min_c].right);
-        M[r][max_c] = lmin(M[r-1][max_c-1] + costs[r][max_c].left, M[r-1][max_c] + costs[r][max_c].up);
+        M[r][min_c] = min(M[r-1][min_c] + costs[r][min_c].up, M[r-1][min_c+1] + costs[r][min_c].right);
+        M[r][max_c] = min(M[r-1][max_c-1] + costs[r][max_c].left, M[r-1][max_c] + costs[r][max_c].up);
     }
 }
 
 
-void find_seam(long **M, int *seam, int h, int min_c, int max_c){    
+void find_seam(int **M, int *seam, int h, int min_c, int max_c){    
     int r, c, mid, min_index;
     int acc;
     
@@ -127,8 +123,7 @@ void remove_seam(pixel **pixels, cost_data **costs, int *seam, int h, int *min_c
                 pixels[r][c] = pixels[r][c+1];
             }
         }
-        
-        
+                
         for(r = 0; r < h; r++){          
             for(c = seam[r]-2; c < *max_c; c++){
                 if(c >= *min_c){

@@ -52,11 +52,11 @@ int main(int argc, char **argv) {
     unsigned char *imgv = NULL;
     pixel **pixels = NULL;
     cost_data **costs = NULL;
-    long **M = NULL;
+    int **M = NULL;
     int *seam = NULL;
     int i;
      
-    imgv = stbi_load("imgs/coast.bmp", &w, &h, &ncomp, 0);
+    imgv = stbi_load("imgs/beach.bmp", &w, &h, &ncomp, 0);
     if(ncomp != 3)
         printf("ERROR -- image does not have 3 components (RGB)\n");
     pixels = build_pixels(imgv, w, h);
@@ -65,9 +65,9 @@ int main(int argc, char **argv) {
     costs = (cost_data**)malloc(h*sizeof(cost_data*));
     for(i = 0; i < h; i++)
         costs[i] = (cost_data*)malloc(w*sizeof(cost_data));
-    M = (long**)malloc(h*sizeof(long*));
+    M = (int**)malloc(h*sizeof(int*));
     for(i = 0; i < h; i++)
-        M[i] = (long*)malloc(w*sizeof(long));
+        M[i] = (int*)malloc(w*sizeof(int));
     seam = (int*)malloc((h+1)*sizeof(int));
     
     //initialize costs
@@ -77,7 +77,7 @@ int main(int argc, char **argv) {
     int max_c = w-1;
     int num_iterations = 0;
     
-    //printf("size %ld \n",sizeof(long));
+    //printf("size %ld \n",sizeof(int));
     
     //here start the loop
     while(num_iterations < 200){
