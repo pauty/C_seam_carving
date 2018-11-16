@@ -54,11 +54,35 @@ int main(int argc, char **argv) {
     cost_data **costs = NULL;
     int **M = NULL;
     int *seam = NULL;
+    
+    
+    long seams_to_remove;
+    char *check;
     int i;
      
-    imgv = stbi_load("imgs/beach.bmp", &w, &h, &ncomp, 0);
-    if(ncomp != 3)
-        printf("ERROR -- image does not have 3 components (RGB)\n");
+    if(argc < 3){
+        printf("usage: %s namefile seams_to_remove\n", argv[0]);
+        return 1;
+    }
+    seams_to_remove = strtol(argv[2], &check, 10);  //10 specifies base-10
+    if (check == argv[2]){   //if no characters were converted pointers are equal
+        printf("ERROR: can't convert string to number, exiting.\n");
+        return 1;
+    }
+    imgv = stbi_load(argv[1], &w, &h, &ncomp, 0);
+    if(imgv == NULL){
+        printf("ERROR: can't load image \"%s\" (maybe the file does not exist?), exiting.\n", argv[1]);
+        return 1;
+    }
+    if(ncomp != 3){
+        printf("ERROR: image does not have 3 components (RGB), exiting.\n");
+        return 1;
+    }
+    if(seams_to_remove < 0 || seams_to_remove >= w){
+        printf("ERROR: number of seams to remove is invalid, exiting.\n");
+        return 1;
+    }
+    
     pixels = build_pixels(imgv, w, h);
     free(imgv);
     
@@ -80,7 +104,7 @@ int main(int argc, char **argv) {
     //printf("size %ld \n",sizeof(int));
     
     //here start the loop
-    while(num_iterations < 200){
+    while(num_iterations < seams_to_remove){
         
         //call the kernel to calculate all costs 
         
@@ -149,5 +173,7 @@ int main(int argc, char **argv) {
     free(costs);
     free(seam);
     free(output);
+    
+    return 0;
 
 }
