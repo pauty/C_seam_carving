@@ -22,12 +22,8 @@ pixel **build_pixels(const unsigned char *imgv, int w, int h){
             pixels[i][j].r = imgv[i*3*w + 3*j];
             pixels[i][j].g = imgv[i*3*w + 3*j + 1];
             pixels[i][j].b = imgv[i*3*w + 3*j + 2];
-            //pixels[i*w + j].a = (unsigned char)255;
-            //printf("%d %d %d; ",pixels[i*w + j].r,pixels[i*w + j].g,pixels[i*w + j].b);
         }
-        //printf("endrow\n");
     }
-    //printf("END------\n\n");
     return pixels;
 }
 
@@ -40,8 +36,6 @@ unsigned char *flatten_pixels(pixel **pixels, int h, int min_c, int max_c){
             flattened[3*i*new_w + 3*j] = pixels[i][min_c + j].r;
             flattened[3*i*new_w + 3*j + 1] = pixels[i][min_c + j].g;
             flattened[3*i*new_w + 3*j + 2] = pixels[i][min_c + j].b;
-            //pixels[i*w + j].a = (unsigned char)255;
-            //printf("%d %d %d; ",pixels[i*w + j].r,pixels[i*w + j].g,pixels[i*w + j].b);
         }
     }
     return flattened;
@@ -62,7 +56,7 @@ int main(int argc, char **argv) {
      
     if(argc < 3){
         printf("usage: %s namefile seams_to_remove\n", argv[0]);
-        return 1;
+        return 0;
     }
     seams_to_remove = strtol(argv[2], &check, 10);  //10 specifies base-10
     if (check == argv[2]){   //if no characters were converted pointers are equal
@@ -101,24 +95,10 @@ int main(int argc, char **argv) {
     int max_c = w-1;
     int num_iterations = 0;
     
-    //printf("size %ld \n",sizeof(int));
-    
-    //here start the loop
     while(num_iterations < seams_to_remove){
         
-        //call the kernel to calculate all costs 
-        
-        //call the kernel to compute comulative map
         compute_M(costs, M, h, min_c, max_c);
         
-        /*
-        for(i = min_c; i <= max_c; i++)
-            printf("%ld, ",M[h-1][i]);
-        getchar();
-        */
-        
-            
-        //kernel to find the seam
         find_seam(M, seam, h, min_c, max_c);
         
         /*
@@ -127,35 +107,10 @@ int main(int argc, char **argv) {
         getchar();
         */
         
-        
-        
-        //remove seam
         remove_seam(pixels, costs, seam, h, &min_c, &max_c);
         
         num_iterations = num_iterations + 1;
     }
-    
-    /*
-    int i;
-    for(i = 40; i < w*h; i = i+w){
-        if(i % w == 0)
-            printf("\n");
-        printf("%d ",costs[i]);
-    }*/
-    
-    /*
-    pixel pix;
-    for(i = 0; i < h; i++){
-        pix = pixels[i][min_c+260];
-        printf("[ %d %d % d ] \n",pix.r, pix.g, pix.b);
-    }*/
-    
-    /*
-    printf("\n\n -------- \n");
-    
-    for(i = 0; i < h; i++){
-        printf("%d ", seam[i]);
-    }*/
     
     unsigned char *output = flatten_pixels(pixels, h, min_c, max_c);
     int success = stbi_write_bmp("img1.bmp", (max_c-min_c)+1, h, 3, output);
@@ -175,5 +130,4 @@ int main(int argc, char **argv) {
     free(output);
     
     return 0;
-
 }

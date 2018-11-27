@@ -88,12 +88,14 @@ void find_seam(int **M, int *seam, int h, int min_c, int max_c){
     
     r = h-1;
     min_index = min_c;
-    //printf("------min c: %d \n",min_c);
+
+    //find min entry in last M row
     for(c = min_c+1; c <= max_c; c++){
         if(M[r][c] < M[r][min_index])
             min_index = c;
     } 
-     
+    
+    //build seam
     seam[r] = min_index; 
     acc = min_index;
     for(r = h-2; r >= 0; r--){
@@ -155,7 +157,6 @@ void remove_seam(pixel **pixels, cost_data **costs, int *seam, int h, int *min_c
             }
         }
         *min_c = *min_c + 1;  
-    }
-       
+    }     
 }
 
